@@ -8,7 +8,7 @@ import { Test } from '../models/test';
   providedIn: 'root',
 })
 export class DashboardService {
-  private baseUrl = 'https://estramipyme-api.vercel.app/usuarios';
+  private baseUrl = 'http://localhost:8080/api/users';
   private baseUrlTest= 'https://estramipyme-api.vercel.app/tests'
 
   constructor(private http: HttpClient) {}
