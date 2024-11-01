@@ -1,35 +1,39 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { switchMap } from 'rxjs';
+import { Observable, switchMap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TestService {
 
-  private baseUrl='http://localhost:8080/api/tests';
+  private baseUrl = 'http://localhost:8080/api/tests';
+  private userUrl = 'http://localhost:8080/api/users';
 
-  constructor(private http: HttpClient){}
+  constructor(private http: HttpClient) {}
 
-  registerTest(testDetails:any){
-    return this.http.get<any[]>(`${this.baseUrl}?id=${testDetails.id_empresa}`).pipe(
+  // Registrar un nuevo test o actualizar si ya existe
+  registerTest(testDetails: any): Observable<any> {
+    return this.http.get<any[]>(`${this.baseUrl}?id=${testDetails.user.id}`).pipe(
       switchMap((existingTests) => {
         if (existingTests.length > 0) {
-          // Si el test con el ID ya existe, se hace PUT para sobrescribirlo
-          return this.http.put(`${this.baseUrl}/${testDetails.id_empresa}`, testDetails);
+          // Si el test ya existe, actualízalo
+          return this.http.put(`${this.baseUrl}/${existingTests[0].id}`, testDetails);
         } else {
-          // Si el test no existe, se hace post para crear un onuevo
+          // Si no existe, crea un nuevo test
           return this.http.post(this.baseUrl, testDetails);
         }
       })
     );
   }
 
-  updateisTestDone(user:any){
-    const url = `http://localhost:8080/api/users/${user.id}`;
-
-    return this.http.patch(url, { isTestDone: true });
-
+  // Actualizar la bandera isTestDone en el usuario
+  updateIsTestDone(userId: number): Observable<any> {
+    return this.http.patch(`${this.userUrl}/${userId}/test-done`, { isTestDone: true });
   }
 
+  // Obtener todos los tests de un usuario
+  getTestsByUserId(userId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}?id=${userId}`);
+  }
 }
