@@ -7,7 +7,7 @@ import { switchMap } from 'rxjs';
 })
 export class TestService {
 
-  private baseUrl='https://estramipyme-api.vercel.app/tests';
+  private baseUrl='http://localhost:8080/api/tests';
 
   constructor(private http: HttpClient){}
 
@@ -26,7 +26,7 @@ export class TestService {
   }
 
   updateisTestDone(user:any){
-    const url = `https://estramipyme-api.vercel.app/usuarios/${user.id}`;
+    const url = `http://localhost:8080/api/users/${user.id}`;
 
     return this.http.patch(url, { isTestDone: true });
 
