@@ -27,7 +27,8 @@ export class TestComponent implements OnInit {
     private router: Router,
     private fb: FormBuilder,
     private userService: UserService,
-    private testService: TestService
+    private testService: TestService,
+   
   ) {
     this.form = this.fb.group({});
   }
@@ -88,6 +89,7 @@ export class TestComponent implements OnInit {
         pregunta7: this.form.get('section3.field7')!.value,
         pregunta8: this.form.get('section3.field8')!.value,
         pregunta9: this.form.get('section3.field9')!.value,
+        
       };
   
       this.testService.registerTest(testDetails).subscribe({
@@ -95,14 +97,26 @@ export class TestComponent implements OnInit {
           if (this.user && this.user.id) { // Re-verificar para asegurar que no sea nulo
             this.testService.updateIsTestDone(Number(this.user.id)).subscribe({
               next: () => {
-                this.isFormSubmitted = true;
                 this.user!.isTestDone = true;
-              }
+                // Llamar al método `aviso` después de actualizar el estado del test 
+                
+              },
+              error: (err) => { console.error('Error updating test status', err);
+               }
             });
           }
-        }
-      });
+        },
+        error: (err) => { console.error('Error registering test', err); 
+      }
+      }); 
     }
+    this.aviso(); 
+    this.goHome();
+  }
+
+  //metodo para crear alerta
+  aviso(){
+    this.isFormSubmitted = true;
   }
 
   // Redirigir al usuario a la página de inicio

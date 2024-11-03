@@ -20,23 +20,19 @@ export class AuthService {
     return this.http.post(this.baseUrl, userDetails)
   }
 
-  login(email: string, password: string): Observable<User | null> {
-    return this.http.get<User[]>(`${this.baseUrl}?email=${email}`).pipe(
-      map(usuarios => {
-        if (usuarios.length > 0) {
-          const user = usuarios[0];
-          // Compara la contraseña ingresada con la almacenada en la base de datos
-          if (password === user.password) {
-            return user;
-          } else {
-            return null;
-          }
-        } else {
-          return null;
-        }
-      }),
-      catchError(() => of(null))
-    );
+
+    
+    login(email: string, password: string): Observable<User | null> {
+      return this.http.get<User[]>(`${this.baseUrl}?email=${email}`).pipe(
+        map(users => {
+          // Encuentra el usuario en el array devuelto que coincide con el email
+          const user = users.find(u => u.email === email);
+          // Verifica si la contraseña coincide
+          return user && user.password === password ? user : null;
+        }),
+        catchError(() => of(null))
+      );
+  
   }
 
   loginAdmin(email:string,password:string): Observable<User|null>{
