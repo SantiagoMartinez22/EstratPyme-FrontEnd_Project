@@ -13,9 +13,9 @@ export class TestService {
 
   constructor(private http: HttpClient) {}
 
-  // Registrar un nuevo test o actualizar si ya existe
   registerTest(testDetails: Test): Observable<any> {
-    return this.http.get<any[]>(`${this.baseUrl}?userId=${testDetails.id_empresa}`).pipe(
+    // Cambiar `id_empresa` por `user.id`
+    return this.http.get<any[]>(`${this.baseUrl}?userId=${testDetails.user.id}`).pipe(
       switchMap((existingTests) => {
         if (existingTests.length > 0) {
           // Si el test ya existe, actualízalo

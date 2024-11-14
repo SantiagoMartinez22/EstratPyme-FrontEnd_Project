@@ -77,36 +77,40 @@ export class TestComponent implements OnInit {
 
   // Enviar el formulario si es válido
   // En TestComponent.ts
-submitForm() {
-  if (this.form.valid && this.user && this.user.id) { // Asegurarse de que `this.user` y `this.user.id` están definidos
-    const testDetails: Test = {
-      id_empresa: String(this.user.id), // Asignar el ID del usuario a id_empresa como string
-      pregunta1: this.form.get('section1.field1')!.value,
-      pregunta2: this.form.get('section1.field2')!.value,
-      pregunta3: this.form.get('section1.field3')!.value,
-      pregunta4: this.form.get('section2.field4')!.value,
-      pregunta5: this.form.get('section2.field5')!.value,
-      pregunta6: this.form.get('section2.field6')!.value,
-      pregunta7: this.form.get('section3.field7')!.value,
-      pregunta8: this.form.get('section3.field8')!.value,
-      pregunta9: this.form.get('section3.field9')!.value,
-    };
-
-    // Enviar los detalles del test al backend
-    this.testService.registerTest(testDetails).subscribe({
-      next: () => {
-        if (this.user && this.user.id) { // Re-verificar para asegurar que no sea nulo
-          this.testService.updateIsTestDone(Number(this.user.id)).subscribe({
-            next: () => {
-              this.isFormSubmitted = true;
-              this.user!.isTestDone = true;
-            }
-          });
+  submitForm() {
+    if (this.form.valid && this.user && this.user.id) {
+      const testDetails: Test = {
+        pregunta1: this.form.get('section1.field1')?.value || '',
+        pregunta2: this.form.get('section1.field2')?.value || '',
+        pregunta3: this.form.get('section1.field3')?.value || '',
+        pregunta4: this.form.get('section2.field4')?.value || '',
+        pregunta5: this.form.get('section2.field5')?.value || '',
+        pregunta6: this.form.get('section2.field6')?.value || '',
+        pregunta7: this.form.get('section3.field7')?.value || '',
+        pregunta8: this.form.get('section3.field8')?.value || '',
+        pregunta9: this.form.get('section3.field9')?.value || '',
+        user: { id: Number(this.user.id) }
+      };
+      
+      this.testService.registerTest(testDetails).subscribe({
+        next: () => {
+          if (this.user && this.user.id) {
+            this.testService.updateIsTestDone(Number(this.user.id)).subscribe({
+              next: () => {
+                this.isFormSubmitted = true;
+                this.user!.isTestDone = true;
+              }
+            });
+          }
+        },
+        error: (err) => {
+          console.error('Error al registrar el test:', err);
         }
-      }
-    });
+      });
+    }
+    
   }
-}
+  
 
 
   //metodo para crear alerta
