@@ -22,7 +22,7 @@
                       <input id="name" type="text" formControlName="name"
                         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" [ngClass]="{'is-invalid': registerForm.get('name')?.invalid && registerForm.get('name')?.touched, 'is-valid': registerForm.get('name')?.valid && registerForm.get('name')?.touched}" required>
                     </div>
-                    <div class="mb-2">
+                    <div class="mb-2 mov1">
                       <label for="password" class="block text-gray-700">Contraseña</label>
                       <input id="password" type="password" formControlName="password"
                         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" [ngClass]="{'is-invalid': registerForm.get('password')?.invalid && registerForm.get('password')?.touched, 'is-valid': registerForm.get('password')?.valid && registerForm.get('password')?.touched}" required>
